@@ -1,2 +1,3 @@
 db/.env
 api/app/.env
+api/app/__pycache__/
