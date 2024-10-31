@@ -21,3 +21,8 @@ class ScriptPublic(ScriptBase):
 
 class ScriptCreate(ScriptBase):
     pass
+
+class ScriptUpdate(ScriptBase):
+    title: str | None = None
+    content: str | None = None
+    timer: int | None = None

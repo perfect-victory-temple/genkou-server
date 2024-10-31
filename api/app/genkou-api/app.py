@@ -1,10 +1,11 @@
 from typing import Annotated
+import uuid
 
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, Query, HTTPException
 from sqlmodel import select
 
 from .database import create_db_and_tables, SessionDep
-from .models import Script, ScriptCreate, ScriptPublic
+from .models import Script, ScriptCreate, ScriptPublic, ScriptUpdate
 
 app = FastAPI()
 
@@ -31,3 +32,18 @@ def read_scripts(
 ):
     scripts = session.exec(select(Script).offset(offset).limit(limit)).all()
     return scripts
+
+# update a script api
+@app.put("/scripts/{script_id}", response_model=ScriptPublic)
+def update_script(script_id: uuid.UUID, script: ScriptUpdate, session: SessionDep):
+    db_script = session.get(Script, script_id)
+    if not db_script:
+        raise HTTPException(status_code=404, detail="Script not found")
+    script_data = script.model_dump(exclude_unset=True) # get only the data sent by the client
+    if not script_data:
+        return db_script
+    db_script.sqlmodel_update(script_data)
+    session.add(db_script)
+    session.commit()
+    session.refresh(db_script)
+    return db_script
