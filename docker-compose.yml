@@ -12,6 +12,8 @@ services:
     stdin_open: true
     volumes:
       - ./api/app/:/usr/src/app/
+    environment:
+      - TZ=Asia/Tokyo
     depends_on:
       db:
         condition: service_healthy
