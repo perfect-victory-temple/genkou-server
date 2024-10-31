@@ -21,3 +21,13 @@ def create_script(script: ScriptCreate, session: SessionDep):
     session.commit()
     session.refresh(db_script)
     return db_script
+
+# read scripts api
+@app.get("/scripts/", response_model=list[ScriptPublic])
+def read_scripts(
+    session: SessionDep,
+    offset: int = 0,
+    limit: Annotated[int, Query(le=10)] = 10, # limit <= 10
+):
+    scripts = session.exec(select(Script).offset(offset).limit(limit)).all()
+    return scripts
