@@ -48,8 +48,9 @@ def update_script(script_id: uuid.UUID, script: ScriptUpdate, session: SessionDe
     session.refresh(db_script)
     return db_script
 
-from .mongodb import TimerCreate, TimerPublic
+from .mongodb import TimerCreate, TimerPublic, TimerUpdate
 from .mongodb import timer_collection
+from bson import ObjectId
 
 # post a timer api
 @app.post("/timers/", response_model=TimerPublic)
@@ -59,3 +60,23 @@ async def create_timer(timer: TimerCreate):
     created_timer = await timer_collection.find_one({"_id": new_timer.inserted_id})
 
     return created_timer
+
+# update a timer api
+@app.put("/timers/{timer_id}", response_model=TimerPublic)
+async def update_timer(timer_id: str, timer: TimerUpdate):
+    try:
+        object_id = ObjectId(timer_id)
+    except:
+        raise HTTPException(status_code=404, detail=f"Timer {timer_id} not found")
+
+    timer_data = timer.model_dump(exclude_unset=True)
+    if not timer_data:
+        existing_timer = await timer_collection.find_one({"_id": object_id})
+        return existing_timer
+
+    updated_result = await timer_collection.replace_one({"_id": object_id}, timer_data)
+    if updated_result.modified_count:
+        updated_timer = await timer_collection.find_one({"_id": object_id})
+        return updated_timer
+
+    raise HTTPException(status_code=404, detail=f"Timer {timer_id} not found")
