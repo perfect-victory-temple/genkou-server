@@ -36,6 +36,19 @@ services:
       interval: 2s
       timeout: 5s
       retries: 5
+  mongodb:
+    image: mongo:7.0.15
+    container_name: genkou-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb-store:/data/db
+      - ./mongodb/configdb:/data/configdb
+    environment:
+      - TZ=Asia/Tokyo
+    env_file:
+      - ./mongodb/.env
 
 volumes:
   data-vol:
+  mongodb-store:
