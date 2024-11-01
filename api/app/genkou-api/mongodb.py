@@ -33,3 +33,6 @@ class TimerPublic(TimerBase):
     model_config = ConfigDict(
         populate_by_name=True
     )
+
+class TimerUpdate(TimerBase):
+    timer_interval: TimerInterval | None = None
