@@ -47,3 +47,15 @@ def update_script(script_id: uuid.UUID, script: ScriptUpdate, session: SessionDe
     session.commit()
     session.refresh(db_script)
     return db_script
+
+from .mongodb import TimerCreate, TimerPublic
+from .mongodb import timer_collection
+
+# post a timer api
+@app.post("/timers/", response_model=TimerPublic)
+async def create_timer(timer: TimerCreate):
+    timer_data = timer.model_dump()
+    new_timer = await timer_collection.insert_one(timer_data)
+    created_timer = await timer_collection.find_one({"_id": new_timer.inserted_id})
+
+    return created_timer
