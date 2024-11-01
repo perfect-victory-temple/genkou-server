@@ -61,6 +61,20 @@ async def create_timer(timer: TimerCreate):
 
     return created_timer
 
+# get a timer api
+@app.get("/timers/{timer_id}", response_model=TimerPublic)
+async def read_timer(timer_id: str):
+    try:
+        object_id = ObjectId(timer_id)
+    except:
+        raise HTTPException(status_code=404, detail=f"Timer {timer_id} not found")
+        
+    timer = await timer_collection.find_one({"_id": object_id})
+    if timer:
+        return timer
+      
+    raise HTTPException(status_code=404, detail=f"Timer {timer_id} not found")
+
 # update a timer api
 @app.put("/timers/{timer_id}", response_model=TimerPublic)
 async def update_timer(timer_id: str, timer: TimerUpdate):
@@ -68,7 +82,6 @@ async def update_timer(timer_id: str, timer: TimerUpdate):
         object_id = ObjectId(timer_id)
     except:
         raise HTTPException(status_code=404, detail=f"Timer {timer_id} not found")
-
     timer_data = timer.model_dump(exclude_unset=True)
     if not timer_data:
         existing_timer = await timer_collection.find_one({"_id": object_id})
