@@ -13,7 +13,7 @@ class ScriptBase(SQLModel):
 class Script(ScriptBase, table=True):
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
     created_at: datetime = Field(default_factory=datetime.now, index=True)
-    updated_at: datetime = Field(default_factory=datetime.now, index=True)
+    updated_at: datetime = Field(default_factory=datetime.now, sa_column_kwargs={'onupdate': datetime.now}, index=True)
 
 class ScriptPublic(ScriptBase):
     id: uuid.UUID
