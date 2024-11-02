@@ -102,3 +102,17 @@ async def update_timer(timer_id: str, timer: TimerUpdate):
         return updated_timer
 
     raise HTTPException(status_code=404, detail=f"Timer {timer_id} not found")
+
+# delete a timer api
+@app.delete("/timers/{timer_id}")
+async def delete_timer(timer_id: str):
+    try:
+        object_id = ObjectId(timer_id)
+    except:
+        raise HTTPException(status_code=404, detail=f"Timer {timer_id} not found")
+
+    delete_result = await timer_collection.delete_one({"_id": object_id})
+    if delete_result.deleted_count == 1:
+        return {"ok": True}
+
+    raise HTTPException(status_code=404, detail=f"Timer {timer_id} not found")
