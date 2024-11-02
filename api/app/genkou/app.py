@@ -77,11 +77,11 @@ async def read_timer(timer_id: str):
         object_id = ObjectId(timer_id)
     except:
         raise HTTPException(status_code=404, detail=f"Timer {timer_id} not found")
-        
+
     timer = await timer_collection.find_one({"_id": object_id})
     if timer:
         return timer
-      
+
     raise HTTPException(status_code=404, detail=f"Timer {timer_id} not found")
 
 # update a timer api
