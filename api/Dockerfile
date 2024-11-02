@@ -12,5 +12,6 @@ RUN python -m pip install -r requirements.txt
 COPY . /usr/src/app/
 
 # 調べた感じ、デプロイ先でのコンテナ起動のために以下のコマンドが必要
-CMD ["uvicorn", "app.genkou.app:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "genkou.app:app", "--host", "0.0.0.0", "--port", "8000"]
+
 
