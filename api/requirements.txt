@@ -3,3 +3,4 @@ sqlmodel==0.0.22
 python-dotenv
 psycopg2
 motor
+alembic
