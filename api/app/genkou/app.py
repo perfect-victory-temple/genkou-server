@@ -24,7 +24,7 @@ def create_script(script: ScriptCreate, session: SessionDep):
 
 # get scripts api (fetch multiple scripts)
 @app.get("/scripts/", response_model=list[ScriptPublic])
-def Get_scripts(
+def get_scripts(
     session: SessionDep,
     offset: int = 0,
     limit: Annotated[int, Query(le=10)] = 10,  # limit <= 10
