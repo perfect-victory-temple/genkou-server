@@ -22,15 +22,23 @@ def create_script(script: ScriptCreate, session: SessionDep):
     session.refresh(db_script)
     return db_script
 
-# read scripts api
+# get scripts api (fetch multiple scripts)
 @app.get("/scripts/", response_model=list[ScriptPublic])
-def read_scripts(
+def get_scripts(
     session: SessionDep,
     offset: int = 0,
     limit: Annotated[int, Query(le=10)] = 10,  # limit <= 10
 ):
     scripts = session.exec(select(Script).offset(offset).limit(limit)).all()
     return scripts
+
+# read a single script api
+@app.get("/scripts/{script_id}", response_model=ScriptPublic)
+def fetch_script(script_id: uuid.UUID, session: SessionDep):
+    script = session.get(Script, script_id)
+    if not script:
+        raise HTTPException(status_code=404, detail="Script not found")
+    return script
 
 # update a script api
 @app.put("/scripts/{script_id}", response_model=ScriptPublic)
