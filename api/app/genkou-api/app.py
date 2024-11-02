@@ -9,7 +9,6 @@ from .models import Script, ScriptCreate, ScriptPublic, ScriptUpdate
 
 app = FastAPI()
 
-
 @app.on_event("startup")
 def on_startup():
     create_db_and_tables()
@@ -28,7 +27,7 @@ def create_script(script: ScriptCreate, session: SessionDep):
 def read_scripts(
     session: SessionDep,
     offset: int = 0,
-    limit: Annotated[int, Query(le=10)] = 10, # limit <= 10
+    limit: Annotated[int, Query(le=10)] = 10,  # limit <= 10
 ):
     scripts = session.exec(select(Script).offset(offset).limit(limit)).all()
     return scripts
@@ -39,7 +38,7 @@ def update_script(script_id: uuid.UUID, script: ScriptUpdate, session: SessionDe
     db_script = session.get(Script, script_id)
     if not db_script:
         raise HTTPException(status_code=404, detail="Script not found")
-    script_data = script.model_dump(exclude_unset=True) # get only the data sent by the client
+    script_data = script.model_dump(exclude_unset=True)  # get only the data sent by the client
     if not script_data:
         return db_script
     db_script.sqlmodel_update(script_data)
@@ -47,6 +46,16 @@ def update_script(script_id: uuid.UUID, script: ScriptUpdate, session: SessionDe
     session.commit()
     session.refresh(db_script)
     return db_script
+
+# delete a script api
+@app.delete("/scripts/{script_id}")
+def delete_script(script_id: uuid.UUID, session: SessionDep):
+    script = session.get(Script, script_id)
+    if not script:
+        raise HTTPException(status_code=404, detail="Script not found")
+    session.delete(script)
+    session.commit()
+    return {"ok": True}
 
 from .mongodb import TimerCreate, TimerPublic, TimerUpdate
 from .mongodb import timer_collection
