@@ -1,5 +1,6 @@
 from datetime import datetime
 import uuid
+from typing import Optional
 
 from sqlmodel import SQLModel, Field
 
@@ -7,7 +8,7 @@ from sqlmodel import SQLModel, Field
 class ScriptBase(SQLModel):
     title: str = Field(index=True)
     content: str
-    timer: int | None = Field(default=None)
+    timer: Optional[int] = Field(default=None)
 
 class Script(ScriptBase, table=True):
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
@@ -23,6 +24,6 @@ class ScriptCreate(ScriptBase):
     pass
 
 class ScriptUpdate(ScriptBase):
-    title: str | None = None
-    content: str | None = None
-    timer: int | None = None
+    title: Optional[str] = None
+    content: Optional[str] = None
+    timer: Optional[int] = None
