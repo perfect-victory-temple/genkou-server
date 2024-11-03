@@ -1,12 +1,12 @@
-FROM python:3.11.10
+FROM python:3.13.0
 
-# バッファリングを回避
+# To avoid buffering of stdout and stderr
 ENV PYTHONUNBUFFERED=1
 
 WORKDIR /usr/src/app/
 
 COPY requirements.txt /usr/src/app/
-RUN python -m pip install --no-cache-dir -r requirements.txt
+RUN python -m pip install -r requirements.txt
 
 COPY . /usr/src/app/
 
