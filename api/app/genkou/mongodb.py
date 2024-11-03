@@ -29,7 +29,7 @@ class TimerCreate(TimerBase):
     pass
 
 class TimerPublic(TimerBase):
-    id: PyObjectId = Field(alias="_id")
+    id: PyObjectId = Field(alias="id")
     model_config = ConfigDict(
         populate_by_name=True
     )
