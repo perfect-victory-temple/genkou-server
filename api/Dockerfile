@@ -1,6 +1,6 @@
-FROM python:3.13.0
+FROM python:3.11.10
 
-# To avoid buffering of stdout and stderr
+# バッファリングを回避
 ENV PYTHONUNBUFFERED=1
 
 WORKDIR /usr/src/app/
