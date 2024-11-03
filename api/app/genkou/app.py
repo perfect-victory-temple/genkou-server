@@ -70,7 +70,7 @@ from .mongodb import timer_collection
 from bson import ObjectId
 
 # post a timer api
-@app.post("/timers/", response_model=TimerPublic, response_model_by_alias=False)
+@app.post("/timers/", response_model=TimerPublic)
 async def create_timer(timer: TimerCreate):
     timer_data = timer.model_dump()
     new_timer = await timer_collection.insert_one(timer_data)
@@ -79,7 +79,7 @@ async def create_timer(timer: TimerCreate):
     return created_timer
 
 # get a timer api
-@app.get("/timers/{timer_id}", response_model=TimerPublic, response_model_by_alias=False)
+@app.get("/timers/{timer_id}", response_model=TimerPublic)
 async def read_timer(timer_id: str):
     try:
         object_id = ObjectId(timer_id)
@@ -93,7 +93,7 @@ async def read_timer(timer_id: str):
     raise HTTPException(status_code=404, detail=f"Timer {timer_id} not found")
 
 # update a timer api
-@app.put("/timers/{timer_id}", response_model=TimerPublic, response_model_by_alias=False)
+@app.put("/timers/{timer_id}", response_model=TimerPublic)
 async def update_timer(timer_id: str, timer: TimerUpdate):
     try:
         object_id = ObjectId(timer_id)
