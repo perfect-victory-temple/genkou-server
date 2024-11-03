@@ -1,4 +1,4 @@
-from typing import Annotated
+from typing import Annotated, Optional
 
 from pydantic import BaseModel, Field, ConfigDict, BeforeValidator
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -35,4 +35,4 @@ class TimerPublic(TimerBase):
     )
 
 class TimerUpdate(TimerBase):
-    timer_interval: TimerInterval | None = None
+    timer_interval: Optional[TimerInterval] = None
