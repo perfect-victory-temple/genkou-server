@@ -1,0 +1,6 @@
+db/.env
+api/app/.env
+api/app/genkou/__pycache__/
+mongodb/.env
+api/app/alembic/__pycache__/
+api/app/alembic/versions/__pycache__/
